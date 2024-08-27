@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Susupended Admin Accounts</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+      <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
+
+      <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+      <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2 overflow-auto bg-dark" style="height:100vh;">
+          <br>
+          <div class="row"><a class="navbar-brand" href="/"><img class="img-fluid" style="height:50px" src="{{ asset('images/Logo.png') }}" alt="logo"></a></div><br><br>
+          <div class="row"><a href="admin_panel" class="nav-link">Admin Dashboard</a></div>
+          <div class="row"><a href="pendingaccounts" class="nav-link">Pending Accounts</a></div>
+          <div class="row"><a href="activeaccounts" class="nav-link">Active Accounts</a></div>
+          <div class="row"><a href="suspendeduser" class="nav-link">Suspended Account</a></div>
+          <div class="row"><a href="business" class="nav-link">Pending Business Account</a></div>
+          <div class="row"><a href="activebusiness" class="nav-link">Active Businesses</a></div>
+          <div class="row" id="createadmin"><a class="nav-link" href="add_admins">Create a admin</a></div>
+          <div class="row" id="adminaccounts"><a href="adminaccounts" class="nav-link">Admin Accounts</a></div>
+          <div class="row"><a class="nav-link" href="suspendedadmin">Suspend Admins</a></div>
+          <div class="row"><a class="nav-link" href="adminlogout">Logout</a></div>
+        </div>
+        <div class="col-sm overflow-auto" style="height:100vh;">
+          <br>
+          <h4>Suspended Admin Accounts</h4>
+          <hr>
+          
+          <table id="example" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>ID Number</th>
+                <th>Address</th>
+                <th>Contact No</th>
+                <th>Email</th>
+                <th>Joined Date</th>
+                <th>action1</th>
+                <th>action2</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        @foreach($admins as $admin)
+          @if($admin->status=='suspend')
+          @if($admin->id > 1)
+            <tr>
+                <td>{{$admin->first_name}}</td>
+                <td>{{$admin->name}}</td>
+                <td>{{$admin->ID_no}}</td>
+                <td>{{$admin->address}}</td>
+                <td>{{$admin->contact}}</td>
+                <td>{{$admin->email}}</td>
+                <td>{{$admin->created_at}}</td>
+                <td>
+                  <form action="{{route('active.admin')}}" method="post">
+                  @csrf
+                  <input type="hidden" name="id" value="{{$admin->id}}">
+                  <input type="hidden" name="status" value="active">
+                  <button class="btn btn-block btn-success" type="submit">Activate</button>
+                  </form>
+                </td>
+                <td><a href="/delete-admin/{{$admin->id}}" class="btn btn-block btn-danger" type="submit">Delete</a></td>
+            </tr>
+            @endif
+          @endif
+        @endforeach
+        </tbody>
+    <table>
+
+    
+   <script>
+      new DataTable('#example');
+   </script>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
